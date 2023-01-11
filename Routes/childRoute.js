@@ -51,25 +51,27 @@ router.delete("/delete-child/:id", (req, res) => {
   const id = req.params.id;
   Child.findOne({ _id: id })
     .then((result) => {
-      if (result.group !== null) {
-        Group.findOne({ _id: result.group }).then((resGroup) => {
-          resGroup.childrenList = resGroup.childrenList.filter(
-            (childId) => childId.toString() !== id.toString()
-          );
-          resGroup.save().then((savedResp) => {
-            console.log("deleteChild", savedResp);
+      if (!result) {
+        res.status(404).send();
+        return;
+      }
+      Group.findOne({ _id: result.group }).then((resGroup) => {
+        resGroup.childrenList = resGroup.childrenList.filter(
+          (childId) => childId.toString() !== id.toString()
+        );
+        resGroup.save().then((savedResp) => {
+          console.log("deleteChild", savedResp);
+          Child.findByIdAndDelete(id).then((deletedChild) => {
+            console.log("deletedChild", deletedChild);
+            res.send(deletedChild);
           });
         });
-      }
+      });
       console.log("log result", result);
     })
     .catch((err) => {
       console.log(err);
     });
-  Child.findByIdAndDelete(id).then((deletedChild) => {
-    console.log("deletedChild", deletedChild);
-    res.send(deletedChild);
-  });
 });
 
 router.patch("/update-child/:id", (req, res) => {
@@ -114,5 +116,34 @@ const addChildToGroup = (groupId, childId) => {
     });
   });
 };
+
+router.patch("/arrived/:id", (req, res) => {
+  const id = req.params.id;
+  const arrived = req.query.isChildArrived;
+  console.log("arrived", arrived);
+  let isArrived = true;
+  if (arrived === "false") {
+    isArrived = false;
+  }
+  Child.findOne({ _id: id })
+    .then((result) => {
+      if (!result) {
+        res.status(404).send();
+        return;
+      }
+      result.isArrived = isArrived;
+      result
+        .save()
+        .then((resArrived) => {
+          res.send(resArrived);
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
 
 module.exports = router;

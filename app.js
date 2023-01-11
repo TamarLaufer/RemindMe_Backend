@@ -7,7 +7,7 @@ const app = express();
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = 3000;
 mongoose.set("strictQuery", true);
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,13 +25,14 @@ app.use("/child", childRoute);
 // app.use("/register", registerRoute);
 // app.use("/login", loginRoute);
 
-console.log(process.env.MONGODB_URL);
-
 mongoose
-  .connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://Tamar_Laufer:Laufer123@remindme.thi1oh0.mongodb.net/RemindMeDB?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then((result) => {
     console.log("DB connected");
     app.listen(port, function () {
