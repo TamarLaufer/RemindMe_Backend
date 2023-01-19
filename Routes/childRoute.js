@@ -4,6 +4,12 @@ const { default: mongoose } = require("mongoose");
 const router = express.Router();
 const Child = require("../models/child");
 const Group = require("../models/group");
+const client = require("twilio")(
+  "AC9844f2d9814b8ca8a8cb273fb0a9c78f",
+  "12c8823254a0565b65721afbc85e8a76"
+);
+
+const childrenArr = [];
 
 //Get all children from all groups together::
 router.get("/", (req, res) => {
@@ -40,6 +46,7 @@ router.post("/add-child", (req, res) => {
           res.send(childRes);
         });
       });
+      childrenArr.push(childRes)
     })
     .catch((err) => {
       console.log(err);
@@ -145,5 +152,20 @@ router.patch("/arrived/:id", (req, res) => {
       res.status(500).send(err);
     });
 });
+
+const sendSMSmessageToParent = () => {
+  client.messages
+    .create({
+      body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
+      // to: ,
+      from: "+12676510616",
+    })
+    .then((message) => console.log(message.sid))
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+// sendSMSmessageToParent();
 
 module.exports = router;

@@ -30,18 +30,23 @@ router.post("/add-group", (req, res) => {
 
 router.delete("/delete-group/:id", (req, res) => {
   const id = req.params.id;
-  Group.findByIdAndDelete(id)
+  Group.findOne({ _id: id })
     .then((result) => {
       Child.deleteMany({ _id: { $in: result.childrenList } }).then(
         (resChildren) => {
           res.send(resChildren);
           console.log("resChildren", resChildren);
+          Group.findByIdAndDelete(id).then((resGroupDel) => {
+            console.log("resGroupDel", resGroupDel);
+          });
         }
       );
-      console.log(result);
     })
     .catch((err) => {
       console.log(err);
+    })
+    .catch((error) => {
+      console.log(error);
     });
 });
 
