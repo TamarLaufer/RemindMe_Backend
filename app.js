@@ -7,14 +7,14 @@ const app = express();
 
 dotenv.config();
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 mongoose.set("strictQuery", true);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // const registerRoute = require("./Routes/register");
-// const loginRoute = require("./Routes/login");
+// const loginRoute = require("./Rzoutes/login");
 const childRoute = require("./Routes/childRoute");
 const groupRoute = require("./Routes/groupRoute");
 const Group = require("./models/group");

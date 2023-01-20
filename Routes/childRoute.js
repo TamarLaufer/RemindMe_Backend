@@ -1,15 +1,9 @@
 const express = require("express");
-const { default: mongoose } = require("mongoose");
 
 const router = express.Router();
 const Child = require("../models/child");
 const Group = require("../models/group");
-const client = require("twilio")(
-  "AC9844f2d9814b8ca8a8cb273fb0a9c78f",
-  "12c8823254a0565b65721afbc85e8a76"
-);
-
-const childrenArr = [];
+const client = require("twilio")(process.env.SID, process.env.API_KEY);
 
 //Get all children from all groups together::
 router.get("/", (req, res) => {
@@ -46,7 +40,6 @@ router.post("/add-child", (req, res) => {
           res.send(childRes);
         });
       });
-      childrenArr.push(childRes)
     })
     .catch((err) => {
       console.log(err);
@@ -153,19 +146,44 @@ router.patch("/arrived/:id", (req, res) => {
     });
 });
 
-const sendSMSmessageToParent = () => {
-  client.messages
-    .create({
-      body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
-      // to: ,
-      from: "+12676510616",
+router.get("/", (req, res) => {
+  Child.find()
+    .sort({ createdAt: -1 })
+    .then((result) => {
+      res.send(result);
     })
-    .then((message) => console.log(message.sid))
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+const sendSMSmessageToParent = () => {
+  var today = new Date();
+  var time = today.getHours() + ":" + today.getMinutes();
+  Child.find()
+    .then((result) => {
+      if (result.isArrived == "false") {
+        if (time == "09:00") {
+          client.messages
+            .create({
+              body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
+              to: result.parentPhone,
+              from: process.env.SENDER_PHONE_NUMBER,
+            })
+            .then((message) => console.log(message.sid))
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
-// sendSMSmessageToParent();
+setInterval(() => {
+  sendSMSmessageToParent();
+}, 60000);
 
 module.exports = router;
