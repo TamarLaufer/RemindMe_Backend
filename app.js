@@ -26,13 +26,10 @@ app.use("/child", childRoute);
 // app.use("/login", loginRoute);
 
 mongoose
-  .connect(
-    "mongodb+srv://Tamar_Laufer:Laufer123@remindme.thi1oh0.mongodb.net/RemindMeDB?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((result) => {
     console.log("DB connected");
     app.listen(port, function () {
