@@ -162,20 +162,27 @@ const sendSMSmessageToParent = () => {
   var time = today.getHours() + ":" + today.getMinutes();
   Child.find()
     .then((result) => {
-      if (result.isArrived == "false") {
-        if (time == "09:00") {
-          client.messages
-            .create({
-              body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
-              to: result.parentPhone,
-              from: process.env.SENDER_PHONE_NUMBER,
-            })
-            .then((message) => console.log(message.sid))
-            .catch((error) => {
-              console.log(error);
-            });
+      result.map((oneChild) => {
+        if (oneChild.isArrived == false) {
+          if (time == "09:00") {
+            client.messages
+              .create({
+                body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
+                to: oneChild.parentPhone,
+                from: process.env.SENDER_PHONE_NUMBER,
+              })
+              .then((message) => console.log(message.sid))
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+          {
+            console.log("not the time");
+          }
+        } else {
+          console.log("not false");
         }
-      }
+      });
     })
     .catch((err) => {
       console.log(err);
