@@ -158,29 +158,32 @@ router.get("/", (req, res) => {
 });
 
 const sendSMSmessageToParent = () => {
-  var today = new Date();
-  var time = today.getHours() + ":" + today.getMinutes();
+  let today = new Date();
+  let time = today.getHours() + ":" + today.getMinutes();
+  let day = today.getDay();
   Child.find()
     .then((result) => {
       result.map((oneChild) => {
-        if (oneChild.isArrived == false) {
-          if (time == "09:00") {
-            client.messages
-              .create({
-                body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
-                to: oneChild.parentPhone,
-                from: process.env.SENDER_PHONE_NUMBER,
-              })
-              .then((message) => console.log(message.sid))
-              .catch((error) => {
-                console.log(error);
-              });
+        if (day !== 6) {
+          if (oneChild.isArrived == false) {
+            if (time == "09:00") {
+              client.messages
+                .create({
+                  body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
+                  to: oneChild.parentPhone,
+                  from: process.env.SENDER_PHONE_NUMBER,
+                })
+                .then((message) => console.log(message.sid))
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+            {
+              console.log("not the time");
+            }
+          } else {
+            console.log("not false");
           }
-          {
-            console.log("not the time");
-          }
-        } else {
-          console.log("not false");
         }
       });
     })
