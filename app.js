@@ -17,13 +17,18 @@ app.use(bodyParser.json());
 // const loginRoute = require("./Rzoutes/login");
 const childRoute = require("./Routes/childRoute");
 const groupRoute = require("./Routes/groupRoute");
+const userRoute = require('./Routes/userRoute')
+const registerRoute = require("./Routes/registerRoute");
+const loginRoute = require("./Routes/loginRoute");
 const Group = require("./models/group");
 const Child = require("./models/child");
+const User = require("./models/user");
 
 app.use("/group", groupRoute);
 app.use("/child", childRoute);
-// app.use("/register", registerRoute);
-// app.use("/login", loginRoute);
+app.use("/user", userRoute);
+app.use("/register", registerRoute);
+app.use("/login", loginRoute);
 
 mongoose
   .connect(process.env.MONGODB_URL, {
@@ -40,10 +45,13 @@ mongoose
     console.log(err);
   });
 
-// Group.insertMany([
-//   { groupName: "תינוקות", assistantName: "חנה", childrenList: [] },
-//   { groupName: "בוגרים", assistantName: "לאה", childrenList: [] },
-//   { groupName: "פעוטות", assistantName: "שרה", childrenList: [] },
+// User.insertMany([
+//   {
+//     userName: "תמר",
+//     password: "1234",
+//     phoneNumber: "0520000000",
+//     email: "tamar@ghj.com",
+//   },
 // ])
 //   .then(function () {
 //     console.log("Data inserted"); // Success

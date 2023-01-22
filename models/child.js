@@ -22,6 +22,7 @@ const childSchema = new Schema(
     isArrived: {
       type: Boolean,
     },
+    userName: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

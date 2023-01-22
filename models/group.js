@@ -9,6 +9,7 @@ const groupSchema = new Schema(
     },
     assistantName: String,
     childrenList: [{ type: Schema.Types.ObjectId, ref: "Child" }],
+    userName: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
