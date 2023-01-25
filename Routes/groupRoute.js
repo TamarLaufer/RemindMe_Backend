@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Group = require("../models/group");
 const Child = require("../models/child");
+const User = require("../models/user");
 
 router.get("/", (req, res) => {
   Group.find()
@@ -15,13 +16,17 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/add-group", (req, res) => {
+router.post("/add-group/", (req, res) => {
   const group = new Group(req.body);
   group
     .save()
-    .then((result) => {
-      res.send(result);
-      console.log(result);
+    .then((groupRes) => {
+      User.findOne({ _id: groupRes.user }).then((resUser) => {
+        resUser.groupsList.push(groupRes._id);
+        resUser.save().then((savedUser) => {
+          res.send(groupRes);
+        });
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -62,6 +67,17 @@ router.patch("/update-group/:id", (req, res) => {
         res.send(savedRes);
         console.log(savedRes);
       });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+//Get all groups in a specipic user with userId:
+router.get("/:userId", (req, res) => {
+  Group.find({ userName: req.params.userId })
+    .then((result) => {
+      res.send(result);
     })
     .catch((err) => {
       console.log(err);

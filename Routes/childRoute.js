@@ -146,16 +146,6 @@ router.patch("/arrived/:id", (req, res) => {
     });
 });
 
-router.get("/", (req, res) => {
-  Child.find()
-    .sort({ createdAt: -1 })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
 
 const sendSMSmessageToParent = () => {
   let today = new Date();
@@ -177,6 +167,7 @@ const sendSMSmessageToParent = () => {
                 .catch((error) => {
                   console.log(error);
                 });
+                console.log("sms sent");
             }
             {
               console.log("not the time");

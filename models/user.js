@@ -6,6 +6,7 @@ const userSchema = new Schema(
     userName: {
       type: String,
       require: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -21,7 +22,6 @@ const userSchema = new Schema(
       require: true,
     },
     groupsList: [{ type: Schema.Types.ObjectId, ref: "Group" }],
-    childrenList: [{ type: Schema.Types.ObjectId, ref: "Child" }],
   },
   { timestamps: true }
 );

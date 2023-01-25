@@ -13,16 +13,11 @@ mongoose.set("strictQuery", true);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// const registerRoute = require("./Routes/register");
-// const loginRoute = require("./Rzoutes/login");
 const childRoute = require("./Routes/childRoute");
 const groupRoute = require("./Routes/groupRoute");
-const userRoute = require('./Routes/userRoute')
+const userRoute = require("./Routes/userRoute");
 const registerRoute = require("./Routes/registerRoute");
 const loginRoute = require("./Routes/loginRoute");
-const Group = require("./models/group");
-const Child = require("./models/child");
-const User = require("./models/user");
 
 app.use("/group", groupRoute);
 app.use("/child", childRoute);
