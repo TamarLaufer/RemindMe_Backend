@@ -9,14 +9,14 @@ router.get("/", (req, res) => {
     .then((result) => {
       res.status(200);
       res.send(result);
-      console.log(result);
+      // console.log(result);
     })
     .catch((err) => {
       console.log(err);
     });
 });
 
-router.post("/add-group/", (req, res) => {
+router.post("/add-group", (req, res) => {
   const group = new Group(req.body);
   group
     .save()
@@ -37,18 +37,35 @@ router.delete("/delete-group/:id", (req, res) => {
   const id = req.params.id;
   Group.findOne({ _id: id })
     .then((result) => {
+      if (!result) {
+        res.status(404).send();
+        return;
+      }
       Child.deleteMany({ _id: { $in: result.childrenList } }).then(
         (resChildren) => {
           res.send(resChildren);
-          console.log("resChildren", resChildren);
-          Group.findByIdAndDelete(id).then((resGroupDel) => {
-            console.log("resGroupDel", resGroupDel);
-          });
+          User.findOne({ _id: result.user })
+            .then((resUser) => {
+              resUser.groupsList = resUser.groupsList.filter(
+                (groupId) => groupId.toString() !== id.toString()
+              );
+              resUser
+                .save()
+                .then((savedResp) => {
+                  console.log("deleteGroup", savedResp);
+                  Group.findByIdAndDelete(id).then((resGroupDel) => {
+                    console.log("resGroupDel", resGroupDel);
+                  });
+                })
+                .catch((err) => {
+                  res.send(err);
+                });
+            })
+            .catch((err) => {
+              res.send(err);
+            });
         }
       );
-    })
-    .catch((err) => {
-      console.log(err);
     })
     .catch((error) => {
       console.log(error);

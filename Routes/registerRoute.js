@@ -11,9 +11,7 @@ router.post("/", async (req, res, next) => {
     email,
     groupsList,
   } = req.body;
-
   const password = await bcrypt.hash(plainTextPassword, 10);
-
   User.create({
     userName,
     password,
@@ -23,14 +21,12 @@ router.post("/", async (req, res, next) => {
   })
     .then((result) => {
       res.send(result);
-      console.log(result);
+      console.log("result", result);
     })
     .catch((error) => {
-      if (error.code == 11000) {
-        next(new Error("DUP_NAME"));
-      } else {
-        next(new Error("INTERNAL_ERROR"));
-      }
+      // res.status(301)
+        // console.log('error', error);
+        res.send(error);
     });
 });
 
