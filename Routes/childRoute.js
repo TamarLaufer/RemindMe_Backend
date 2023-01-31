@@ -146,7 +146,6 @@ router.patch("/arrived/:id", (req, res) => {
     });
 });
 
-
 const sendSMSmessageToParent = () => {
   let today = new Date();
   let time = today.getHours() + ":" + today.getMinutes();
@@ -156,7 +155,7 @@ const sendSMSmessageToParent = () => {
       result.map((oneChild) => {
         if (day !== 6) {
           if (oneChild.isArrived == false) {
-            if (time == "09:00") {
+            if (time == "9:1") {
               client.messages
                 .create({
                   body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
@@ -167,7 +166,7 @@ const sendSMSmessageToParent = () => {
                 .catch((error) => {
                   console.log(error);
                 });
-                console.log("sms sent");
+              console.log("sms sent");
             }
             {
               console.log("not the time");
@@ -183,8 +182,39 @@ const sendSMSmessageToParent = () => {
     });
 };
 
+const rebootChildrenArrived = () => {
+  let today = new Date();
+  let time = today.getHours() + ":" + today.getMinutes();
+  let day = today.getDay();
+  let isArrived = false;
+  Child.find()
+    .then((result) => {
+      if (time === "20:1") {
+        result.map((child) => {
+          child.isArrived = isArrived;
+          child
+            .save()
+            .then((resArrived) => {
+              console.log(resArrived);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 setInterval(() => {
   sendSMSmessageToParent();
-}, 60000);
+  rebootChildrenArrived();
+}, 30000);
 
+// let today = new Date();
+// let time = today.getHours() + ":" + today.getMinutes();
+// let day = today.getDay();
+// console.log(time);
 module.exports = router;

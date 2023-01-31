@@ -21,7 +21,9 @@ router.post("/add-group", (req, res) => {
   group
     .save()
     .then((groupRes) => {
+      console.log(groupRes);
       User.findOne({ _id: groupRes.user }).then((resUser) => {
+        console.log(resUser);
         resUser.groupsList.push(groupRes._id);
         resUser.save().then((savedUser) => {
           res.send(groupRes);
@@ -92,8 +94,9 @@ router.patch("/update-group/:id", (req, res) => {
 
 //Get all groups in a specipic user with userId:
 router.get("/:userId", (req, res) => {
-  Group.find({ userName: req.params.userId })
+  Group.find({ user: req.params.userId })
     .then((result) => {
+      console.log(result);
       res.send(result);
     })
     .catch((err) => {

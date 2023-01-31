@@ -37,7 +37,7 @@ mongoose
     });
   })
   .catch((err) => {
-    console.log(err);
+    console.log("no connection", err);
   });
 
 // User.insertMany([
