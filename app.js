@@ -32,9 +32,7 @@ mongoose
   })
   .then((result) => {
     console.log("DB connected");
-    app.listen(port, function () {
-      console.log(`App is listening to port ${port}`);
-    });
+    app.listen(port, "0.0.0.0");
   })
   .catch((err) => {
     console.log("no connection", err);
