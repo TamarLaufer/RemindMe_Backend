@@ -24,6 +24,9 @@ app.use("/child", childRoute);
 app.use("/user", userRoute);
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
+app.get("/", (req, res) => {
+  res.send("hello server");
+});
 
 mongoose
   .connect(process.env.MONGODB_URL, {

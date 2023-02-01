@@ -155,7 +155,7 @@ const sendSMSmessageToParent = () => {
       result.map((oneChild) => {
         if (day !== 6) {
           if (oneChild.isArrived == false) {
-            if (time == "9:1") {
+            if (time == "7:1") {
               client.messages
                 .create({
                   body: "הילד/ה לא הגיע/ה היום לגן, האם ידוע לך?",
