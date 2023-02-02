@@ -189,7 +189,7 @@ const rebootChildrenArrived = () => {
   let isArrived = false;
   Child.find()
     .then((result) => {
-      if (time === "20:1") {
+      if (time === "4:1") {
         result.map((child) => {
           child.isArrived = isArrived;
           child
